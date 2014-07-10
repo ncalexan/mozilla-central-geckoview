@@ -78,7 +78,8 @@ popd
 
 mkdir -p $REPO
 cp index.html $REPO
-mvn deploy:deploy-file -Durl=file://$REPO \
+mvn --batch-mode \
+    deploy:deploy-file -Durl=file://$REPO \
                        -DrepositoryId=org.mozilla \
                        -Dfile=geckoview.aar \
                        -DgroupId=org.mozilla.geckoview \
