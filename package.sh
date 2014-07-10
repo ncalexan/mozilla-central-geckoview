@@ -69,6 +69,7 @@ VERSION=20140710071924
 REPO=m2-repo
 mkdir -p $REPO
 
+cp index.html $REPO
 mvn deploy:deploy-file -Durl=file://$REPO \
                        -DrepositoryId=org.mozilla \
                        -Dfile=geckoview.aar \
