@@ -3,10 +3,11 @@
 set -e
 
 ROOT=http://ftp.mozilla.org/pub/mozilla.org/mobile/nightly/latest-mozilla-central-android
-CACHE=cache
-STAGE=stage
-WORK=work
-REPO=m2-repo
+BUILD=$PWD/build
+CACHE=$BUILD/cache
+STAGE=$BUILD/stage
+WORK=$BUILD/work
+REPO=$PWD/m2-repo
 VERSION=unknown
 
 mkdir -p $CACHE
@@ -29,8 +30,8 @@ popd
 rm -rf $WORK
 mkdir -p $WORK
 pushd $WORK
-unzip ../$CACHE/geckoview_library.zip
-unzip ../$CACHE/geckoview_assets.zip
+unzip $CACHE/geckoview_library.zip
+unzip $CACHE/geckoview_assets.zip
 popd
 
 # The 'aar' bundle is the binary distribution of an Android Library Project.
@@ -73,7 +74,7 @@ cp -R $WORK/geckoview_library/libs/armeabi-v7a $STAGE/jni
 cp -R $WORK/assets $STAGE/assets
 
 pushd $STAGE
-zip ../geckoview.aar -r .
+zip $WORK/geckoview.aar -r .
 popd
 
 mkdir -p $REPO
@@ -81,7 +82,7 @@ cp index.html $REPO
 mvn --batch-mode \
     deploy:deploy-file -Durl=file://$REPO \
                        -DrepositoryId=org.mozilla \
-                       -Dfile=geckoview.aar \
+                       -Dfile=$WORK/geckoview.aar \
                        -DgroupId=org.mozilla.geckoview \
                        -DartifactId=library \
                        -Dversion=$VERSION \
