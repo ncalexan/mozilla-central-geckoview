@@ -2,13 +2,26 @@
 
 set -e
 
-ROOT=http://ftp.mozilla.org/pub/mozilla.org/mobile/nightly/latest-mozilla-central-android/
+ROOT=http://ftp.mozilla.org/pub/mozilla.org/mobile/nightly/latest-mozilla-central-android
 CACHE=cache
 STAGE=stage
 WORK=work
+REPO=m2-repo
+VERSION=unknown
 
 mkdir -p $CACHE
 pushd $CACHE
+# This is a fancy way of downloading fennec-VERSION.multi.android-arm.txt to a
+# known location.  It's necessary because the Fennec version rolls forward with
+# the trains.  The build id could also be extracted from the fennec-*.json file,
+# but that requires downloading a file with a version in its name, and requires
+# more work to extract the version.
+# See http://stackoverflow.com/a/18107344 and the wget man page.
+PATTERN=fennec-*.txt
+rm -rf $PATTERN
+wget --quiet --recursive --level=1 --no-directories --no-parent --accept "$PATTERN" --timestamping $ROOT/
+VERSION=$(head -n 1 $PATTERN)
+
 wget --timestamping $ROOT/geckoview_library.zip
 wget --timestamping $ROOT/geckoview_assets.zip
 popd
@@ -63,12 +76,7 @@ pushd $STAGE
 zip ../geckoview.aar -r .
 popd
 
-# TODO: Extract this from the build properties JSON.
-VERSION=20140710071924
-
-REPO=m2-repo
 mkdir -p $REPO
-
 cp index.html $REPO
 mvn deploy:deploy-file -Durl=file://$REPO \
                        -DrepositoryId=org.mozilla \
