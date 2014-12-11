@@ -2,7 +2,7 @@
 
 set -e
 
-ROOT=http://ftp.mozilla.org/pub/mozilla.org/mobile/nightly/latest-mozilla-central-android
+ROOT=http://ftp.mozilla.org/pub/mozilla.org/mobile/nightly/latest-mozilla-central-android-api-10/
 BUILD=$PWD/build
 CACHE=$BUILD/cache
 STAGE=$BUILD/stage
